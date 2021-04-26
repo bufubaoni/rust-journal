@@ -59,7 +59,28 @@ pub fn complete_task(journal_path: PathBuf, task_position: usize) -> Result<()>{
     Ok(())
 
 }
-pub fn list_task(journal_path: PathBuf) -> Result<()>{...}
+pub fn list_task(journal_path: PathBuf) -> Result<()>{
+    let file = OpenOptions::new()
+    .read(true)
+    .write(true)
+    .create(true)
+    .open(journal_path)?;
+
+    let mut tasks = collect_tasks(&file)?;
+
+    if tasks.is_empty() {
+        println!("Task list is empty");
+    } else {
+        let mut order: u32 = 1;
+
+        for task in tasks{
+            println!("{}: {}", order, task);
+            order += 1;
+        }
+    }
+
+    Ok(())
+}
 
 
 fn collect_takes(mut file: &File) -> Result<Vec<Task>>{
@@ -73,4 +94,13 @@ fn collect_takes(mut file: &File) -> Result<Vec<Task>>{
     serde_json::to_writer(file, &tasks)?;
 
     Ok(())
+}
+
+use std::fmt;
+
+impl fmt::Display for Task {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let created_at = self.created_at.with_timezone(&local).format("%F %H:%M");
+        write!(f,"{:<50} [{}]", self.text, created_at)
+    }
 }
