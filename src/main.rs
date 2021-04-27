@@ -18,4 +18,5 @@ fn main() {
         List => tasks::list_task(journal_file),
         Done { position } => tasks::complete_task(journal_file, position),
     }
+    .expect("Failed to perform action");
 }
