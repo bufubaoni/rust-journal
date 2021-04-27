@@ -1,4 +1,4 @@
-use chrono::{serde::ts_seconds, DateTime, Local, Utc}
+use chrono::{serde::ts_seconds, DateTime, Local, Utc};
 use serde::Deserialize;
 use serde::Serialize;
 
